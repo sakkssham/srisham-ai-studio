@@ -749,29 +749,20 @@ export default function StudioPage() {
             className="w-full h-full object-cover scale-x-[-1]" /* Mirror locally for natural feed */
           />
 
-          {/* Calibration Loading Overlay */}
-          {!trackerStatus.isTrackingLocked && cameraActive && (
-            <div className="absolute inset-0 bg-black/65 backdrop-blur-sm flex flex-col justify-center items-center gap-3 z-10 pointer-events-none select-none">
-              <Sparkles className="w-8 h-8 text-accentGold animate-pulse" />
-              <p className="text-sm font-semibold tracking-wide text-white">{trackerStatus.message}</p>
-              <p className="text-[10px] text-zinc-500">Ensure your face is well-lit and centered in front of the camera.</p>
-            </div>
-          )}
-
-          {/* Offline/Error Camera Overlay */}
-          {!cameraActive && (
+          {/* Offline/Error Camera Overlay (only shown if access is explicitly denied or blocked) */}
+          {(trackerStatus.state === 'camera_denied' || trackerStatus.state === 'error') && (
             <div className="absolute inset-0 bg-[#121216] flex flex-col justify-center items-center gap-4 z-10 p-6 text-center select-none">
               <div className="w-16 h-16 rounded-full bg-white/5 border border-white/8 flex items-center justify-center">
                 <Camera className="w-8 h-8 text-zinc-400" />
               </div>
               <div>
-                <h3 className="font-serif text-lg font-bold text-white mb-1">Webcam Stream Offline</h3>
+                <h3 className="font-serif text-lg font-bold text-white mb-1">Webcam Access Blocked</h3>
                 <p className="text-xs text-zinc-400 max-w-xs leading-relaxed">
-                  Turn on the webcam or adjust browser camera permissions to calibrate local AR landmark layouts.
+                  Please enable camera permissions in your browser address bar to calibrate the AR makeup studio.
                 </p>
               </div>
               <Button variant="gold" onClick={handleToggleCamera} className="py-2.5 px-6 text-xs mt-2">
-                Turn On Camera
+                Retry Permission
               </Button>
             </div>
           )}
